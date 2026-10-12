@@ -53,7 +53,12 @@ def footer(depth):
       <dialog id="image-dialog" class="image-dialog"><button type="button" class="dialog-close" aria-label="Закрыть изображение">×</button><img src="" alt=""><p></p></dialog>'''
 
 def document(title, body, slug='', depth=0, description='Оборудование для пищевой промышленности: проектирование, изготовление и ремонт.'):
-    return f'''<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="{e(description)}"><title>{e(title)} — Пищевые механизмы</title><link rel="stylesheet" href="{e(asset('styles.css', depth))}"><script defer src="{e(asset('app.js', depth))}"></script></head><body>{header(slug, depth)}<main id="content">{body}</main>{footer(depth)}</body></html>'''
+    canonical = ''
+    if DATA.get('site_url'):
+        canonical_slug = '' if slug == 'index' else slug
+        url = DATA['site_url'].rstrip('/') + '/' + (quote(canonical_slug) + '/' if canonical_slug else '')
+        canonical = f'<link rel="canonical" href="{e(url)}">'
+    return f'''<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="{e(description)}"><title>{e(title)} — Пищевые механизмы</title>{canonical}<link rel="stylesheet" href="{e(asset('styles.css', depth))}"><script defer src="{e(asset('app.js', depth))}"></script></head><body>{header(slug, depth)}<main id="content">{body}</main>{footer(depth)}</body></html>'''
 
 def category_card(c, depth, number=None):
     if c['image']:

@@ -28,13 +28,46 @@ Workflow `.github/workflows/pages.yml` соберёт сайт, проверит
 и опубликует только готовую папку `docs`. Его также можно запустить вручную
 через **Actions → Deploy website to GitHub Pages → Run workflow**.
 
-Адрес после успешного развёртывания:
-<https://nikolay-shapoval.github.io/tornado_current/>.
-Ссылки относительные и работают внутри пути `/tornado_current/`.
+Основной адрес после настройки домена: <https://ипзурначеваа.рус/>.
+Переходы и изображения используют относительные пути и работают как в корне
+этого домена, так и в пути `/tornado_current/` стандартного адреса GitHub Pages.
+
+### Домен ипзурначеваа.рус
+
+В **Settings → Pages → Custom domain** укажите ASCII-представление домена и нажмите Save:
+
+```text
+xn--80aaagokg5bql6a3c.xn--p1acf
+```
+
+DNS-зона обслуживается `ns1.reg.ru` и `ns2.reg.ru`. В панели управления зоной
+REG.RU замените существующую A-запись корня домена (`@`) на четыре записи:
+
+| Тип | Имя / Subdomain | Значение |
+| --- | --- | --- |
+| A | @ | 185.199.108.153 |
+| A | @ | 185.199.109.153 |
+| A | @ | 185.199.110.153 |
+| A | @ | 185.199.111.153 |
+| CNAME | www | nikolay-shapoval.github.io |
+
+Для `www` замените прежнюю A-запись на приведённую CNAME-запись. При проверке
+12.10.2026 корень и `www` указывали на `94.142.142.104`.
+Для текущего workflow GitHub Actions пользовательский домен задаётся именно
+в настройках GitHub Pages. CNAME-файл сборки для этого workflow не используется.
+
+После обновления DNS и выпуска сертификата включите **Enforce HTTPS**.
+DNS-изменения могут распространяться до 24 часов. При желании подтвердите владение
+доменом в **настройках аккаунта → Pages → Add a domain**, добавив TXT-запись,
+значение которой покажет GitHub.
+
+[Настройка домена на GitHub](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
+и [управление зоной REG.RU](https://help.reg.ru/support/dns-servery-i-nastroyka-zony/nastroyka-resursnykh-zapisey-dns/nastroyka-resursnykh-zapisey-dns-dlya-domena).
 
 ## Изменение сайта
 
 - `source/content.json` — содержание страниц; `verbatim_body` хранит точный текст вложения.
+- `site_url` в `source/content.json` — основной адрес для canonical-ссылок страниц.
 - `source/privacy.txt` — новая политика обработки персональных данных.
 - `source/styles.css` и `source/app.js` — оформление и поведение интерфейса.
 - `assets/` — исходные публичные изображения и видео.
