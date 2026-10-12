@@ -172,15 +172,35 @@ def product(c, depth):
     if not specs and not body:
         body = '<section><h2>Обсудить конфигурацию</h2><p>Расскажите, с каким продуктом вы работаете, какая производительность требуется и где планируется разместить оборудование. Позвоните, чтобы обсудить вашу задачу.</p></section>'
     side = f'<aside class="product-aside"><span class="eyebrow">Пищевые механизмы</span><h3>Есть задача<br>для производства?</h3><p>Обсудим продукт, требуемую производительность и компоновку оборудования.</p><a href="tel:{DATA["phone_digits"]}">{DATA["phone"]}</a><a class="text-link" href="{e(link("контакты", depth))}">Контакты →</a></aside>'
-    supplier_images = {x['file'].removeprefix('assets/') for x in DATA['assets'] if x.get('kind') == 'manufacturer publication image'}
-    attribution = f'<p class="image-credit">Дополнительные фото и схемы: <a href="{e(DATA["supplier_publication"])}" target="_blank" rel="noopener">публикация производителя на Foodretail</a>.</p>' if supplier_images.intersection(c['gallery'] + [c['image']]) else ''
     other = [x for x in CATS if x['group'] == c['group'] and x['slug'] != c['slug']][:3]
     related = ''.join(f'<a href="{e(link(x["slug"], depth))}">{e(x["title"])} {arrow()}</a>' for x in other)
-    return hero + f'<section class="container section product-content"><div>{specs}{body}{video_section(c, depth)}{gallery(c["gallery"], depth)}{attribution}</div>{side}</section>' + (f'<section class="container section related-section"><span class="eyebrow">Другие разделы</span><div class="related-links">{related}</div></section>' if related else '')
+    return hero + f'<section class="container section product-content"><div>{specs}{body}{video_section(c, depth)}{gallery(c["gallery"], depth)}</div>{side}</section>' + (f'<section class="container section related-section"><span class="eyebrow">Другие разделы</span><div class="related-links">{related}</div></section>' if related else '')
 
 def projects(depth):
-    photos = ['production-line.webp', 'mixing-vessel.webp', 'mushroom-machine.webp', 'inclined-conveyor.webp', 'vertical-conveyor.webp', 'mixing-drum.webp']
-    return f'<section class="container page-heading"><div class="breadcrumbs"><a href="{e(link("", depth))}">Главная</a><span>/</span><span>Наши работы</span></div><span class="eyebrow">Проектирование и производство</span><h1>От идеи до готового<br>оборудования.</h1><p>Производство и ремонт пищевого оборудования с 2005 года.</p></section><section class="container section about-grid"><div><h2>Конструкторское бюро.<br>Производственная площадка.</h2></div><div>{render_recovered(DATA["projects_body"])}</div></section><section class="container section">{gallery(photos, depth)}<p class="image-credit">Фото и схемы оборудования из <a href="{e(DATA["supplier_publication"])}" target="_blank" rel="noopener">публикации производителя на Foodretail</a>.</p></section>'
+    # Keep the original wording; separate the introduction from the equipment list.
+    paragraphs = [part for part in re.split(r'\n\s*\n', DATA['projects_body']) if part.strip()]
+    list_start = next(i for i, part in enumerate(paragraphs) if part.strip() == 'ПРОЕКТЫ В ПРОИЗВОДСТВЕ:')
+    introduction = ''.join(f'<p>{e(part)}</p>' for part in paragraphs[:list_start])
+    equipment = ''.join(f'<li>{e(part)}</li>' for part in paragraphs[list_start + 1:])
+    drawing = 'production-line.webp'
+    caption = ASSET_CAPTIONS[drawing]
+    photos = ['mushroom-machine.webp', 'mixing-vessel.webp', 'inclined-conveyor.webp', 'vertical-conveyor.webp', 'mixing-drum.webp']
+    return f'''<section class="container page-heading projects-heading">
+      <div class="breadcrumbs"><a href="{e(link("", depth))}">Главная</a><span>/</span><span>Наши работы</span></div>
+      <span class="eyebrow">Проектирование и производство</span><h1>Наши работы</h1>
+      <p>Производство и ремонт пищевого оборудования с 2005 года.</p>
+    </section>
+    <section class="container projects-intro" aria-label="О производстве">
+      <div class="projects-description">{introduction}</div>
+      <button class="gallery-item projects-drawing" type="button" data-image="{e(asset(drawing, depth))}" data-caption="{e(caption)}">
+        <img src="{e(asset(drawing, depth))}" alt="{e(caption)}"><span>{e(caption)} {arrow()}</span>
+      </button>
+    </section>
+    <section class="container projects-production" aria-labelledby="projects-production-heading">
+      <h2 id="projects-production-heading">{e(paragraphs[list_start])}</h2>
+      <ul class="projects-equipment">{equipment}</ul>
+    </section>
+    <section class="container projects-gallery">{gallery(photos, depth)}</section>'''
 
 def contacts(depth):
     details = f'<p>{e(DATA.get("address", DATA["city"]))}</p>'
