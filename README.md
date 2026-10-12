@@ -10,7 +10,7 @@
 Запустите `start-site.bat` или откройте `docs/index.html`.
 После свежего клонирования сначала соберите сайт:
 
-```sh
+```sh 
 python3 source/build_site.py
 python3 source/check_site.py
 python3 -m http.server 8765 --bind 127.0.0.1 --directory docs
