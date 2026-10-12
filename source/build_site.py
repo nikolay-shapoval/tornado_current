@@ -33,8 +33,7 @@ def arrow():
 
 def header(slug, depth):
     items = ''.join(f'<a href="{e(link(c["slug"], depth))}">{e(c["title"])}</a>' for c in CATS)
-    symbol = f'<img class="brand-symbol" src="{e(asset(DATA["brand_symbol"], depth))}" alt="">' if DATA.get('brand_symbol') else ''
-    brand = symbol + '<span class="brand-name"><span>ПИЩЕВЫЕ</span><strong>механизмы</strong></span>'
+    brand = f'<img class="brand-logo" src="{e(asset(DATA["logo"], depth))}" alt="Пищевые механизмы">'
     return f'''<a class="skip-link" href="#content">Перейти к содержимому</a>
     <header class="header"><div class="header-inner">
       <a class="brand" href="{e(link('', depth))}">{brand}</a>

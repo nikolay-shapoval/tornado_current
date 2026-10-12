@@ -992,6 +992,13 @@
       "caption": "Фирменный знак «Пищевые механизмы»",
       "kind": "original transparent logo from Tornado",
       "sha256": "c6fc7821fe2085c7bd624b357b582c3cb68942cfe2e504857f69c7cfbd318c5e"
+    },
+    {
+      "file": "assets/company-logo-transparent.png",
+      "caption": "Пищевые механизмы — исходный логотип на прозрачном фоне",
+      "kind": "imagegen edit of original logo from owner DOCX",
+      "source_asset": "assets/company-logo.png",
+      "sha256": "6fbbe7a72a937f4a4a50a2ce3c48d42fe650fe010559fff9d49c93f6e6de5e20"
     }
   ],
   "original_page_urls": [
@@ -1032,7 +1039,7 @@
     "contakti": "контакты",
     "privacy": "политика-конфиденциальности"
   },
-  "logo": "company-logo.png",
+  "logo": "company-logo-transparent.png",
   "local_sources": {
     "dump_date": "2024-05-15 13:17:33",
     "public_table_counts": {
@@ -1045,6 +1052,5 @@
     "embedded_image_files": 36,
     "owner_confirmed": "ИП Зурначёв А.А."
   },
-  "brand_symbol": "company-symbol.png",
   "site_url": "https://xn--80aaagokg5bql6a3c.xn--p1acf"
 }
