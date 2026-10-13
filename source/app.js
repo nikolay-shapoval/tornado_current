@@ -1,16 +1,26 @@
 (() => {
   const menuButton = document.querySelector('.menu-button');
   const navigation = document.querySelector('.navigation');
+  const catalogDropdown = document.querySelector('.catalog-dropdown');
   menuButton?.addEventListener('click', () => {
     const expanded = menuButton.getAttribute('aria-expanded') !== 'true';
     menuButton.setAttribute('aria-expanded', String(expanded));
     navigation.classList.toggle('is-open', expanded);
   });
+  document.addEventListener('click', event => {
+    if (!catalogDropdown?.contains(event.target)) {
+      catalogDropdown?.removeAttribute('open');
+    }
+    if (!navigation?.contains(event.target) && !menuButton?.contains(event.target)) {
+      navigation?.classList.remove('is-open');
+      menuButton?.setAttribute('aria-expanded', 'false');
+    }
+  });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') {
       navigation?.classList.remove('is-open');
       menuButton?.setAttribute('aria-expanded', 'false');
-      document.querySelector('.catalog-dropdown')?.removeAttribute('open');
+      catalogDropdown?.removeAttribute('open');
     }
   });
   const input = document.querySelector('#catalog-search');
